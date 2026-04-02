@@ -7,10 +7,10 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class crud {
+public class Crud {
     private final String inputFile;
 
-    public crud(String inputFile) {
+    public Crud(String inputFile) {
         this.inputFile = inputFile;
     }
 
@@ -39,6 +39,11 @@ public class crud {
         return null;
     }
 
+    // READ (все)
+    public List<Character> findAll() {
+        return readAllFromFile();
+    }
+
     // READ
     private List<Character> readAllFromFile() {
         List<Character> characters = new ArrayList<>();
@@ -56,11 +61,6 @@ public class crud {
             System.err.println("Просчитались и вот где: " + e.getMessage());
         }
         return characters;
-    }
-
-    // READ (все)
-    public List<Character> findAll() {
-        return readAllFromFile();
     }
 
     // SAVE
@@ -118,24 +118,14 @@ public class crud {
     }
 
     private String serializeCharacter(Character c) {
-        return String.join(",",
-                String.valueOf(c.getId()),
-                quoteIfNeeded(c.getName()),
-                quoteIfNeeded(c.getStatus()),
-                quoteIfNeeded(c.getSpecies()),
-                quoteIfNeeded(c.getType()),
-                quoteIfNeeded(c.getGender()),
-                quoteIfNeeded(c.getOriginName()),
-                quoteIfNeeded(c.getLocationName()),
-                c.getCreated() != null ? c.getCreated().toString() : ""
-        );
-    }
-
-    private String quoteIfNeeded(String value) {
-        if (value == null) return "";
-        if (value.contains(",") || value.contains("\"")) {
-            return "\"" + value.replace("\"", "\"\"") + "\"";
-        }
-        return value;
+        return c.getId() + "," +
+                (c.getName() != null ? c.getName() : "") + "," +
+                (c.getStatus() != null ? c.getStatus() : "") + "," +
+                (c.getSpecies() != null ? c.getSpecies() : "") + "," +
+                (c.getType() != null ? c.getType() : "") + "," +
+                (c.getGender() != null ? c.getGender() : "") + "," +
+                (c.getOriginName() != null ? c.getOriginName() : "") + "," +
+                (c.getLocationName() != null ? c.getLocationName() : "") + "," +
+                (c.getCreated() != null ? c.getCreated().toString() : "");
     }
 }
