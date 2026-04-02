@@ -27,7 +27,7 @@ public class Main {
 
         Set<String> uniqueTypes = FindUnique.findUnique(allCharacters);
 
-        System.out.println("\nУникальные комбинации (status - species):");
+        System.out.println("Уникальные комбинации status - species:");
         for (String type : uniqueTypes) {
             System.out.println(type);
         }
@@ -79,7 +79,7 @@ public class Main {
         updatedChar.setOriginName("Earth (C-137)");
         updatedChar.setLocationName("Citadel of New Jersey");
         updatedChar.setCreated(LocalDateTime.now());
-        crudService.update(999, updatedChar);
+        crudService.update(77, updatedChar);
 
         Character afterUpdate = crudService.findById(77);
         if (afterUpdate != null) System.out.println("После обновления: " + afterUpdate.getName() + ", статус: " + afterUpdate.getStatus());
@@ -90,9 +90,8 @@ public class Main {
 
         // DELETE
         crudService.delete(77);
-
         Character afterDelete = crudService.findById(77);
-        if (afterDelete == null) System.out.println("Персонаж с ID 999 успешно удалён");
+        if (afterDelete == null) System.out.println("Персонаж с указанным ID успешно удалён");
     }
 
     private static List<Character> readFrom() {
