@@ -20,7 +20,7 @@
     <maven.shade.plugin.version>3.4.1</maven.shade.plugin.version>
     <junit.version>6.0.2</junit.version>
     <maven.compiler.plugin.version>3.13.0</maven.compiler.plugin.version>
-    <lombok.version>1.18.36</lombok.version>
+<!--    <lombok.version>1.18.36</lombok.version>-->
 </properties>
 
 <dependencyManagement>
@@ -31,12 +31,12 @@
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
-       <dependency> <!-- lombok-->
-            <groupId>org.projectlombok</groupId>  <!-- ? -->
-            <artifactId>lombok</artifactId>
-            <version>${lombok.version}</version>
-            <scope>provided</scope>
-        </dependency>
+<!--       <dependency> &lt;!&ndash; lombok&ndash;&gt;-->
+<!--            <groupId>org.projectlombok</groupId>  &lt;!&ndash; ? &ndash;&gt;-->
+<!--            <artifactId>lombok</artifactId>-->
+<!--            <version>${lombok.version}</version>-->
+<!--            <scope>provided</scope>-->
+<!--        </dependency>-->
     </dependencies>
 </dependencyManagement>
 
