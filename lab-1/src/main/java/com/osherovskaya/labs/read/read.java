@@ -55,13 +55,12 @@ public class read {
                     continue;
                 }
                 Character character = csvParser.parseLine(line); // парсинг строки
-                if (character != null) allCharacters.add(character); // добавляем в общую кашу после проверки а парс (?)
+                if (character != null) allCharacters.add(character); // добавляем в общую кашу после проверки в парс
             }
         } catch (IOException e) {
             System.err.println("Просчитались, и вот где: " + e.getMessage());
         }
-        System.out.println("Отработало");
-
+        //System.out.println("Отработало");
         return allCharacters;
     }
 }

@@ -14,40 +14,6 @@ public class crud {
         this.inputFile = inputFile;
     }
 
-    // READ
-    private List<Character> readAllFromFile() {
-        List<Character> characters = new ArrayList<>();
-
-        try (BufferedReader br = new BufferedReader(new FileReader(inputFile))) {
-            String line = br.readLine();
-
-            while ((line = br.readLine()) != null) {
-                Character character = csvParser.parseLine(line);
-                if (character != null) {
-                    characters.add(character);
-                }
-            }
-        } catch (IOException e) {
-            System.err.println("Просчитались и вот где: " + e.getMessage());
-        }
-        return characters;
-    }
-
-    // SAVE
-    private void saveAllToFile(List<Character> characters) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(inputFile))) {
-            writer.write("id,name,status,species,type,gender,origin_name,location_name,created");
-            writer.newLine();
-
-            for (Character c : characters) {
-                writer.write(serializeCharacter(c));
-                writer.newLine();
-            }
-        } catch (IOException e) {
-            System.err.println("Просчитались при сохранении и вот где: " + e.getMessage());
-        }
-    }
-
     // CREATE
     public boolean create(Character character) {
         if (character == null) return false;
@@ -73,9 +39,43 @@ public class crud {
         return null;
     }
 
+    // READ
+    private List<Character> readAllFromFile() {
+        List<Character> characters = new ArrayList<>();
+
+        try (BufferedReader br = new BufferedReader(new FileReader(inputFile))) {
+            String line = br.readLine();
+
+            while ((line = br.readLine()) != null) {
+                Character character = csvParser.parseLine(line);
+                if (character != null) {
+                    characters.add(character);
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("Просчитались и вот где: " + e.getMessage());
+        }
+        return characters;
+    }
+
     // READ (все)
     public List<Character> findAll() {
         return readAllFromFile();
+    }
+
+    // SAVE
+    private void saveAllToFile(List<Character> characters) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(inputFile))) {
+            writer.write("id,name,status,species,type,gender,origin_name,location_name,created");
+            writer.newLine();
+
+            for (Character c : characters) {
+                writer.write(serializeCharacter(c));
+                writer.newLine();
+            }
+        } catch (IOException e) {
+            System.err.println("Просчитались при сохранении и вот где: " + e.getMessage());
+        }
     }
 
     // UPDATE

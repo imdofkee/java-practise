@@ -17,7 +17,7 @@ public class Character {
     public Character() {
     }
 
-    // Конструктор со всеми полями
+    // Конструктор со всеми полями...
     public Character(Integer id, String name, String status, String species,
                      String type, String gender, String originName,
                      String locationName, LocalDateTime created) {

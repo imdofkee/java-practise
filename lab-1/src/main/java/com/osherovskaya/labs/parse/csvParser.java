@@ -1,7 +1,7 @@
 package com.osherovskaya.labs.parse;
 
 import com.osherovskaya.labs.model.character.Character;
-//import lombok.*; // ??
+//import lombok.*;
 
 public class csvParser {
     public static Character parseLine(String line) {
@@ -15,7 +15,7 @@ public class csvParser {
         Character character = new Character();
         character.setStatus(status);
         character.setSpecies(species);
-        System.out.println("Отработало");
+        //System.out.println("Отработало");
         return character;
     }
 }
