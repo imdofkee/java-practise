@@ -22,7 +22,7 @@ public class FilesEventRepository {
     }
 
     public Optional<File> getById(int id) throws Exceptions {
-        String sql = "SELECT id, customer_name, amount FROM " + table + " WHERE id = ?";
+        String sql = "SELECT id, file_name, sizeInKB FROM " + table + " WHERE id = ?";
         try (
                 Connection conn = connectionFactory.getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -40,7 +40,7 @@ public class FilesEventRepository {
     }
 
     public List<File> getAll() throws Exceptions {
-        String sql = "SELECT id, customer_name, amount FROM " + table + " ORDER BY customer_name, amount";
+        String sql = "SELECT id, file_name, sizeInKB FROM " + table + " WHERE id = ?";
         try (
                 Connection conn = connectionFactory.getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql);
@@ -52,12 +52,12 @@ public class FilesEventRepository {
             }
             return result;
         } catch (SQLException e) {
-            throw new Exceptions("Failed to fetch all Orders", e);
+            throw new Exceptions("Failed to fetch all Files", e);
         }
     }
 
     public void save(File file) throws Exceptions {
-        String sql = "INSERT INTO " + table + " (id, customer_name, amount) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO " + table + " (id, file_name, sizeInKB) VALUES (?, ?, ?)";
         try (
                 Connection conn = connectionFactory.getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -75,8 +75,8 @@ public class FilesEventRepository {
         String createTable = "CREATE TABLE IF NOT EXISTS \"" + table + "\"" + """
                 (
                 id INTEGER PRIMARY KEY,
-                customer_name TEXT NOT NULL,
-                amount TEXT NOT NULL
+                file_name TEXT NOT NULL,
+                sizeInKB TEXT NOT NULL
                 )
                 """;
         try (Connection conn = connectionFactory.getConnection()) {
@@ -96,7 +96,7 @@ public class FilesEventRepository {
     }
 
     public void update(File newObject) throws Exceptions {
-        String sql = "UPDATE " + this.table + " SET customer_name=?, amount=? WHERE id=?";;
+        String sql = "UPDATE " + this.table + " SET file_name=?, sizeInKB=? WHERE id=?";;
         try (
                 Connection conn = this.connectionFactory.getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql);
@@ -108,7 +108,7 @@ public class FilesEventRepository {
             ps.executeUpdate();
 
         } catch (SQLException e) {
-            throw new Exceptions("Failed to INSERT Order", e);
+            throw new Exceptions("Failed to INSERT File", e);
         }
     }
 
@@ -121,7 +121,7 @@ public class FilesEventRepository {
             ps.setObject(1, id);
             ps.executeUpdate();
         } catch (SQLException e) {
-            throw new Exceptions("Failed to DELETE Orders", e);
+            throw new Exceptions("Failed to DELETE File", e);
         }
     }
 }

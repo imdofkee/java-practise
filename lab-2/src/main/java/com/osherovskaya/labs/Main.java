@@ -3,7 +3,6 @@ package com.osherovskaya.labs;
 import com.osherovskaya.labs.database.Migrator;
 import com.osherovskaya.labs.database.exceptions.Exceptions;
 import com.osherovskaya.labs.database.hikariFactory.HikariConnectionFactory;
-//import com.osherovskaya.labs.database.jbdi.FilesEventRepository;
 import com.osherovskaya.labs.database.repository.FilesEventRepository;
 import com.osherovskaya.labs.database.model.File;
 
@@ -25,10 +24,10 @@ public class Main {
             System.out.println(repo_jdbi.getClass());
 
              FilesEventRepository repository = new FilesEventRepository(factory, "office", "files");
-             repository.save(new File(1, "My first Java Code", 1024));
+             repository.save(new File(1, "My first Java Code", "1024"));
              System.out.println(repository.getAll());
              System.out.println(repository.getById(1));
-             repository.update(new File(2, "My last Java Code", 101));
+             repository.update(new File(2, "My last Java Code", "101"));
              repository.deleteById(2);
              System.out.println(repository.getAll());
         }

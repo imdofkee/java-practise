@@ -5,7 +5,7 @@ public class File {
     private String filename;
     private int sizeInKB;
 
-    public File(int id, String name, int size) {
+    public File(int id, String name, String size) {
         this.ID = id;
         this.filename = name;
         this.sizeInKB = size;
