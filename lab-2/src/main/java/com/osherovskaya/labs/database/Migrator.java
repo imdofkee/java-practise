@@ -3,8 +3,8 @@ package com.osherovskaya.labs.database;
 import liquibase.Liquibase;
 import liquibase.database.jvm.JdbcConnection;
 import liquibase.resource.ClassLoaderResourceAccessor;
-import com.osherovskaya.database.factory.ConnectionFactory;
-import com.osherovskaya.database.factory.HikariConnectionFactory;
+import com.osherovskaya.labs.database.hikariFactory.ConnectionFactory;
+import com.osherovskaya.labs.database.hikariFactory.HikariConnectionFactory;
 
 import java.sql.Connection;
 

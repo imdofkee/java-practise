@@ -1,17 +1,15 @@
-package com.osherovskaya;
+package com.osherovskaya.labs;
 
-import com.osherovskaya.database.migrator;
-import com.osherovskaya.database.exception.exception;
-import com.osherovskaya.database.factory.ConnectionFactory;
-import com.osherovskaya.database.factory.NewConnectionFactory;
-import com.osherovskaya.database.factory.HikariConnectionFactory;
-import com.osherovskaya.database.jdbi_example.OrdersEventRepository;
-import com.osherovskaya.database.model.File;
+import com.osherovskaya.labs.database.Migrator;
+import com.osherovskaya.labs.database.exceptions.Exceptions;
+import com.osherovskaya.labs.database.hikariFactory.HikariConnectionFactory;
+//import com.osherovskaya.labs.database.jbdi.FilesEventRepository;
+import com.osherovskaya.labs.database.repository.FilesEventRepository;
+import com.osherovskaya.labs.database.model.File;
 
 
 public class Main {
-    public static void main(String[] args) throws RepositoryException {
-        // Не забудь добавить в при запуске все переменные окружения!
+    public static void main(String[] args) throws Exceptions {
         HikariConnectionFactory factory = new HikariConnectionFactory(
                 System.getenv("DATABASE_URL"),
                 System.getenv("DATABASE_USERNAME"),
@@ -19,14 +17,14 @@ public class Main {
                 System.getenv("APP_DATABASE_SCHEMA")
         );
 
-        DatabaseMigrator databaseMigrator = new migrator(factory);
+        Migrator databaseMigrator = new Migrator(factory);
         databaseMigrator.runMigrations();
 
         try {
             FilesEventRepository repo_jdbi = new FilesEventRepository(factory);
-            System.out.println(repo_jdbi.getAll());
+            System.out.println(repo_jdbi.getClass());
 
-             FilesEventRepository repository = new FilesEventRepository(factory, "shop", "orders");
+             FilesEventRepository repository = new FilesEventRepository(factory, "office", "files");
              repository.save(new File(1, "My first Java Code", 1024));
              System.out.println(repository.getAll());
              System.out.println(repository.getById(1));
@@ -34,7 +32,7 @@ public class Main {
              repository.deleteById(2);
              System.out.println(repository.getAll());
         }
-        catch (RepositoryException exception) {
+        catch (Exceptions exception) {
             System.out.println("Просчитались, вот где: " + exception.getMessage());
             System.out.println("И вот почему: " + exception.getCause());
         }

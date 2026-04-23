@@ -1,11 +1,11 @@
 package com.osherovskaya.labs.database.model;
 
-public class FIle {
+public class File {
     private int ID;
     private String filename;
     private int sizeInKB;
 
-    public FIle(int id, String name, int size) {
+    public File(int id, String name, int size) {
         this.ID = id;
         this.filename = name;
         this.sizeInKB = size;

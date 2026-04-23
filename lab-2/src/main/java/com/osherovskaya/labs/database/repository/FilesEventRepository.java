@@ -1,57 +1,33 @@
-package com.osherovskaya.database.repository;
+package com.osherovskaya.labs.database.repository;
 
-import com.osherovskaya.database.exception.RepositoryException;
-import com.osherovskaya.database.factory.ConnectionFactory;
-import com.osherovskaya.database.model.File;
+import com.osherovskaya.labs.database.exceptions.Exceptions;
+import com.osherovskaya.labs.database.hikariFactory.ConnectionFactory;
+import com.osherovskaya.labs.database.model.File;
 
 import java.sql.*;
 import java.util.*;  // по факту только Array и ArrayList
 import java.util.Optional;
 
-public class FilesEventRepository implements FileRepository {
+public class FilesEventRepository {
 
     private final ConnectionFactory connectionFactory;
     private final String schema;
     private final String table;
 
-    public FilesEventRepository(ConnectionFactory connectionFactory, String schema, String table) throws RepositoryException {
+    public FilesEventRepository(ConnectionFactory connectionFactory, String schema, String table) throws Exceptions {
         this.connectionFactory = connectionFactory;
         this.schema = schema;
         this.table = table;
         createTables();
     }
 
-    @Override
-    public int save(File file) throws RepositoryException {
-        String sql = "INSERT INTO " + table + " (filename, size_kb) VALUES (?, ?)";
-        try (
-                Connection conn = connectionFactory.getConnection();
-                PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-
-            ps.setString(1, file.getFilename());
-            ps.setInt(2, file.getSizeInKB());
-            ps.executeUpdate();
-
-            try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
-                if (generatedKeys.next()) {
-                    return generatedKeys.getInt(1);
-                } else {
-                    throw new RepositoryException("Failed to get generated ID");
-                }
-            }
-        } catch (SQLException e) {
-            throw new RepositoryException("Failed to save File", e);
-        }
-    }
-
-    @Override
-    public Optional<File> findById(int id) throws RepositoryException {
-        String sql = "SELECT id, filename, size_kb FROM " + table + " WHERE id = ?";
+    public Optional<File> getById(int id) throws Exceptions {
+        String sql = "SELECT id, customer_name, amount FROM " + table + " WHERE id = ?";
         try (
                 Connection conn = connectionFactory.getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            ps.setInt(1, id);
+            ps.setObject(1, id);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     return Optional.of(map(rs));
@@ -59,100 +35,93 @@ public class FilesEventRepository implements FileRepository {
             }
             return Optional.empty();
         } catch (SQLException e) {
-            throw new RepositoryException("Failed to fetch File by id", e);
+            throw new Exceptions("Failed to fetch NewsEvent by id", e);
         }
     }
 
-    @Override
-    public Optional<File> findByFilename(String filename) throws RepositoryException {
-        String sql = "SELECT id, filename, size_kb FROM " + table + " WHERE filename = ?";
-        try (
-                Connection conn = connectionFactory.getConnection();
-                PreparedStatement ps = conn.prepareStatement(sql)) {
-
-            ps.setString(1, filename);
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    return Optional.of(map(rs));
-                }
-            }
-            return Optional.empty();
-        } catch (SQLException e) {
-            throw new RepositoryException("Просчитались, и вот где", e);
-        }
-    }
-
-    @Override
-    public List<File> findAll() throws RepositoryException {
-        String sql = "SELECT id, filename, size_kb FROM " + table + " ORDER BY filename";
+    public List<File> getAll() throws Exceptions {
+        String sql = "SELECT id, customer_name, amount FROM " + table + " ORDER BY customer_name, amount";
         try (
                 Connection conn = connectionFactory.getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql);
                 ResultSet rs = ps.executeQuery()) {
 
-            List<File> result = new ArrayList<>();
+            List<File> result = new ArrayList<>(rs.getFetchSize());
             while (rs.next()) {
                 result.add(map(rs));
             }
             return result;
         } catch (SQLException e) {
-            throw new RepositoryException("Просчитались, и вот где", e);
+            throw new Exceptions("Failed to fetch all Orders", e);
         }
     }
 
-    @Override
-    public boolean update(File file) throws RepositoryException {
-        String sql = "UPDATE " + table + " SET filename = ?, size_kb = ? WHERE id = ?";
+    public void save(File file) throws Exceptions {
+        String sql = "INSERT INTO " + table + " (id, customer_name, amount) VALUES (?, ?, ?)";
         try (
                 Connection conn = connectionFactory.getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            ps.setString(1, file.getFilename());
-            ps.setInt(2, file.getSizeInKB());
-            ps.setInt(3, file.getId());
-
-            int affectedRows = ps.executeUpdate();
-            return affectedRows > 0;
-        } catch (SQLException e) {
-            throw new RepositoryException("Просчитались, и вот где", e);
-        }
-    }
-
-    @Override
-    public void deleteById(int id) throws RepositoryException {
-        String sql = "DELETE FROM " + table + " WHERE id = ?";
-        try (
-                Connection conn = connectionFactory.getConnection();
-                PreparedStatement ps = conn.prepareStatement(sql)) {
-
-            ps.setInt(1, id);
+            ps.setObject(1, file.getFileID());
+            ps.setString(2, file.getFileName());
+            ps.setObject(3, file.getFileSize());
             ps.executeUpdate();
         } catch (SQLException e) {
-            throw new RepositoryException("Просчитались, и вот где", e);
+            throw new Exceptions("Failed to save NewsEvent", e);
         }
     }
 
-    private void createTables() throws RepositoryException {
-        String createTable = """
-            CREATE TABLE IF NOT EXISTS """ + table + """ 
-            (
-                id SERIAL PRIMARY KEY,
-                filename VARCHAR(255) NOT NULL UNIQUE,
-                size_kb INT NOT NULL CHECK (size_kb > 0)
-            )
-            """;
-        try (Connection conn = connectionFactory.getConnection();
-             Statement st = conn.createStatement()) {
-            st.execute(createTable);
+    private void createTables() throws Exceptions {
+        String createTable = "CREATE TABLE IF NOT EXISTS \"" + table + "\"" + """
+                (
+                id INTEGER PRIMARY KEY,
+                customer_name TEXT NOT NULL,
+                amount TEXT NOT NULL
+                )
+                """;
+        try (Connection conn = connectionFactory.getConnection()) {
+            try (Statement st = conn.createStatement()) {
+                st.execute(createTable);
+            }
         } catch (SQLException e) {
-            throw new RepositoryException("Просчитались, и вот где", e);
+            throw new Exceptions("Failed to create tables", e);
         }
     }
 
-    private File map(ResultSet rs) throws SQLException {
-        int id = rs.getInt("id");
-        String filename = rs.getString("filename");
-        int sizeInKB = rs.getInt("size_kb");
-        return new File(id, filename, sizeInKB);
+    private static File map(ResultSet rs) throws SQLException {
+        int id = (int) rs.getObject("id");
+        String fileName = rs.getString("file_name");
+        String sizeInKB = rs.getString("size");
+        return new File(id, fileName, sizeInKB);
+    }
+
+    public void update(File newObject) throws Exceptions {
+        String sql = "UPDATE " + this.table + " SET customer_name=?, amount=? WHERE id=?";;
+        try (
+                Connection conn = this.connectionFactory.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql);
+        ) {
+            ps.setObject(3, newObject.getFileID());
+            ps.setString(1, newObject.getFileName());
+            ps.setObject(2, newObject.getFileSize());
+
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new Exceptions("Failed to INSERT Order", e);
+        }
+    }
+
+    public void deleteById(int id) throws Exceptions {
+        String sql = String.format("DELETE FROM %s WHERE id=?;", this.table);
+        try (
+                Connection conn = this.connectionFactory.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql);
+        ) {
+            ps.setObject(1, id);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new Exceptions("Failed to DELETE Orders", e);
+        }
     }
 }
