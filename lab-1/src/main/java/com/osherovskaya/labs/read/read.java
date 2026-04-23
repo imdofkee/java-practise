@@ -60,7 +60,7 @@ public class read {
         } catch (IOException e) {
             System.err.println("Просчитались, и вот где: " + e.getMessage());
         }
-        //System.out.println("Отработало");
+        //System.out.println("вроде живое, но кто знает");
         return allCharacters;
     }
 }

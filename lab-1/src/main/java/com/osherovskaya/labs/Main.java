@@ -22,6 +22,7 @@ public class Main {
             System.err.println("Пустой файл!");
             return;
         }
+        allCharacters.getFirst().hashCode();
 
         System.out.println("Загружено персонажей: " + allCharacters.size());
 

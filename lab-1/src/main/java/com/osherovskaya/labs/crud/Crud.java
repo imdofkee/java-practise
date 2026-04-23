@@ -74,7 +74,7 @@ public class Crud {
                 writer.newLine();
             }
         } catch (IOException e) {
-            System.err.println("Просчитались при сохранении и вот где: " + e.getMessage());
+            System.err.println("Просчитались (при сохранении) и вот где: " + e.getMessage());
         }
     }
 

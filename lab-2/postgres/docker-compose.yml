@@ -1,0 +1,33 @@
+#FROM ubuntu:latest
+#LABEL authors="User"
+#
+#ENTRYPOINT ["top", "-b"]
+
+
+
+version: '3.8'
+
+volumes:
+  postgres_data:
+
+services:
+    dofkee-laboratories:
+        image: postgres:18  # Шаблона контейнеру -- используем Postgres
+        container_name: postgres-java-lab-2
+        restart: no
+        environment:  # Задание переменных окружения из .env
+            POSTGRES_DB: ${APP_DATABASE_SCHEMA}
+            POSTGRES_USER: ${DATABASE_USERNAME}
+            POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+        ports:  # Проброс портов.
+            - "5432:5432"
+        command: ["postgres", "-c", "log_statement=all"]
+        volumes:
+            - ./init-db.sql:/docker-entrypoint-initdb.d/init-db.sql  # Запуск собственного init скрипта
+            - postgres_data:/var/lib/postgresql
+        healthcheck:  # Тестовый запуск
+            test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+            interval: 3s
+            retries: 5
+            start_period: 15s
+            timeout: 5s
