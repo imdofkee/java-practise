@@ -20,7 +20,10 @@ public class Main {
         databaseMigrator.runMigrations();
 
         try {
-            FilesEventRepository repo_jdbi = new FilesEventRepository(factory);
+            FilesEventRepository repo_jdbi = new FilesEventRepository(
+                    factory,
+                    System.getenv("APP_DATABASE_SCHEMA"),
+                    "shop");
             System.out.println(repo_jdbi.getClass());
 
              FilesEventRepository repository = new FilesEventRepository(factory, "office", "files");

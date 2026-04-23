@@ -8,7 +8,7 @@ public class File {
     public File(int id, String name, String size) {
         this.ID = id;
         this.filename = name;
-        this.sizeInKB = size;
+        this.sizeInKB = Integer.parseInt(size);
     }
 
     //Геттеры и сеттеры
