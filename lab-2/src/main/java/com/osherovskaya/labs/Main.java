@@ -2,13 +2,15 @@ package com.osherovskaya.labs;
 
 import com.osherovskaya.labs.database.Migrator;
 import com.osherovskaya.labs.database.exceptions.Exceptions;
+import com.osherovskaya.labs.database.exceptions.LabotoryRuntimeException;
 import com.osherovskaya.labs.database.hikariFactory.HikariConnectionFactory;
 import com.osherovskaya.labs.database.repository.FilesEventRepository;
 import com.osherovskaya.labs.database.model.File;
 
 
+
 public class Main {
-    public static void main(String[] args) throws Exceptions {
+    public static void main(String[] args) throws Exception {
         HikariConnectionFactory factory = new HikariConnectionFactory(
                 System.getenv("DATABASE_URL"),
                 System.getenv("DATABASE_USERNAME"),
@@ -30,13 +32,15 @@ public class Main {
              repository.save(new File(1, "My first Java Code", "1024"));
              System.out.println(repository.getAll());
              System.out.println(repository.getById(1));
-             repository.update(new File(2, "My last Java Code", "101"));
+             repository.update(new File(2, "My last Java Code (im a frontender)", "101"));
              repository.deleteById(2);
              System.out.println(repository.getAll());
         }
-        catch (Exceptions exception) {
-            System.out.println("Просчитались, вот где: " + exception.getMessage());
-            System.out.println("И вот почему: " + exception.getCause());
+        catch (RuntimeException exception) {
+//            Throwable message = exception.getMessage();
+            Throwable cause = exception.getCause();
+//            System.out.println("Просчитались, вот где: "+ Exception.getMessage());
+//            System.out.println("И вот почему: "+ Exception.getCause());
         }
     }
 }

@@ -3,8 +3,6 @@
 #
 #ENTRYPOINT ["top", "-b"]
 
-
-
 version: '3.8'
 
 volumes:
@@ -19,7 +17,7 @@ services:
             POSTGRES_DB: ${APP_DATABASE_SCHEMA}
             POSTGRES_USER: ${DATABASE_USERNAME}
             POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
-        ports:  # Проброс портов.
+        ports:  # Проброс портов
             - "5432:5432"
         command: ["postgres", "-c", "log_statement=all"]
         volumes:
