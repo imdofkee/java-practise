@@ -37,8 +37,10 @@ public class Main {
              System.out.println(repository.getAll());
         }
         catch (RuntimeException exception) {
-//            Throwable message = exception.getMessage();
-            Throwable cause = exception.getCause();
+            throw new LabotoryRuntimeException(
+                    "Просчитались, вот где: " + exception.getMessage(),
+                    exception
+            );
 //            System.out.println("Просчитались, вот где: "+ Exception.getMessage());
 //            System.out.println("И вот почему: "+ Exception.getCause());
         }
