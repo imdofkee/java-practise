@@ -58,7 +58,7 @@ public class FilesEventRepository implements EntityRepository {
     }
 
     public int save(File file) {
-        String sql = "INSERT INTO " + table + " (id, file_name, size_in_kb) VALUES (?, ?, ?)";
+        String sql = " INSERT INTO " + table + " (id, file_name, size_in_kb) VALUES (?, ?, ?)";
         try (
                 Connection conn = connectionFactory.getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -98,7 +98,7 @@ public class FilesEventRepository implements EntityRepository {
     }
 
     public boolean update(File newObject) {
-        String sql = "UPDATE " + this.table + "SET file_name=?, size_in_kb=? WHERE id=?";
+        String sql = "UPDATE " + this.table + " SET file_name=?, size_in_kb=? WHERE id=?";
         try (Connection conn = this.connectionFactory.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, newObject.getFileName());

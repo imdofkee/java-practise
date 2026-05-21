@@ -35,4 +35,12 @@ public class File {
     public void setFileSIze(int size) {
         this.sizeInKB = size;
     }
+
+    public String toString() {
+        return "File{" +
+                "id=" + ID +
+                ", filename='" + filename + '\'' +
+                ", sizeInKB=" + sizeInKB +
+                '}';
+    }
 }
