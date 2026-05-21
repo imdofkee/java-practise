@@ -3,12 +3,13 @@ package com.osherovskaya.labs.database.repository;
 import com.osherovskaya.labs.database.exceptions.Exceptions;
 import com.osherovskaya.labs.database.hikariFactory.ConnectionFactory;
 import com.osherovskaya.labs.database.model.File;
+import com.osherovskaya.labs.database.repository.EntityRepository;
 
 import java.sql.*;
 import java.util.*;  // по факту только Array и ArrayList
 import java.util.Optional;
 
-public class FilesEventRepository {
+public class FilesEventRepository implements EntityRepository {
 
     private final ConnectionFactory connectionFactory;
     private final String schema;
@@ -20,8 +21,8 @@ public class FilesEventRepository {
         this.table = table;
         createTables();
     }
-
-    public Optional<File> getById(int id) throws Exceptions {
+    // Optional?
+    public File findById(int id) {
         String sql = "SELECT id, file_name, sizeInKB FROM " + table + " WHERE id = ?";
         try (
                 Connection conn = connectionFactory.getConnection();
@@ -30,17 +31,17 @@ public class FilesEventRepository {
             ps.setObject(1, id);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    return Optional.of(map(rs));
+                    return map(rs);
                 }
             }
-            return Optional.empty();
+            return null;
         } catch (SQLException e) {
-            throw new Exceptions("Failed to fetch NewsEvent by id", e);
+            throw new RuntimeException("Ошибка в поиске по ID. Он точно существует?", e);
         }
     }
 
-    public List<File> getAll() throws Exceptions {
-        String sql = "SELECT id, file_name, sizeInKB FROM " + table + " WHERE id = ?";
+    public List<File> findAll() {
+        String sql = "SELECT id, file_name, sizeInKB FROM " + table;
         try (
                 Connection conn = connectionFactory.getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql);
@@ -52,11 +53,11 @@ public class FilesEventRepository {
             }
             return result;
         } catch (SQLException e) {
-            throw new Exceptions("Failed to fetch all Files", e);
+            throw new RuntimeException("Ошибка фетча файлов", e);
         }
     }
 
-    public void save(File file) throws Exceptions {
+    public int save(File file) {
         String sql = "INSERT INTO " + table + " (id, file_name, sizeInKB) VALUES (?, ?, ?)";
         try (
                 Connection conn = connectionFactory.getConnection();
@@ -67,11 +68,12 @@ public class FilesEventRepository {
             ps.setObject(3, file.getFileSize());
             ps.executeUpdate();
         } catch (SQLException e) {
-            throw new Exceptions("Failed to save NewsEvent", e);
+            throw new RuntimeException("Ошибка в сохранении", e);
         }
+        return file.getFileID();
     }
 
-    private void createTables() throws Exceptions {
+    private void createTables() {
         String createTable = "CREATE TABLE IF NOT EXISTS \"" + table + "\"" + """
                 (
                 id INTEGER PRIMARY KEY,
@@ -84,35 +86,48 @@ public class FilesEventRepository {
                 st.execute(createTable);
             }
         } catch (SQLException e) {
-            throw new Exceptions("Failed to create tables", e);
+            throw new RuntimeException("Ошибка создания таблицы", e);
         }
     }
 
     private static File map(ResultSet rs) throws SQLException {
         int id = (int) rs.getObject("id");
         String fileName = rs.getString("file_name");
-        String sizeInKB = rs.getString("size");
+        String sizeInKB = rs.getString("sizeInKB");
         return new File(id, fileName, sizeInKB);
     }
 
-    public void update(File newObject) throws Exceptions {
-        String sql = "UPDATE " + this.table + " SET file_name=?, sizeInKB=? WHERE id=?";;
-        try (
-                Connection conn = this.connectionFactory.getConnection();
-                PreparedStatement ps = conn.prepareStatement(sql);
-        ) {
-            ps.setObject(3, newObject.getFileID());
+    public boolean update(File newObject) {
+        String sql = "UPDATE " + this.table + "SET file_name=?, sizeInKB=? WHERE id=?";
+        try (Connection conn = this.connectionFactory.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, newObject.getFileName());
-            ps.setObject(2, newObject.getFileSize());
-
-            ps.executeUpdate();
-
+            ps.setInt(2, newObject.getFileSize());
+            ps.setInt(3, newObject.getFileID());
+            int affectedRows = ps.executeUpdate();
+            return affectedRows > 0;
         } catch (SQLException e) {
-            throw new Exceptions("Failed to INSERT File", e);
+            throw new RuntimeException("Не удалось обновить файл", e);
         }
     }
 
-    public void deleteById(int id) throws Exceptions {
+    public File findByField(String filename) {
+        String sql = "SELECT id, file_name, sizeInKB FROM " + table + " WHERE file_name = ?";
+        try (Connection conn = connectionFactory.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, filename);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return map(rs);
+                }
+                return null;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Ошибка поиска по имени файла", e);
+        }
+    }
+
+    public void deleteById(int id) {
         String sql = String.format("DELETE FROM %s WHERE id=?;", this.table);
         try (
                 Connection conn = this.connectionFactory.getConnection();
@@ -121,7 +136,7 @@ public class FilesEventRepository {
             ps.setObject(1, id);
             ps.executeUpdate();
         } catch (SQLException e) {
-            throw new Exceptions("Failed to DELETE File", e);
+            throw new RuntimeException("Ошибка! Удалить не вышло", e);
         }
     }
 }

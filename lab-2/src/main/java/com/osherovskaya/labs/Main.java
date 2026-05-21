@@ -8,7 +8,6 @@ import com.osherovskaya.labs.database.repository.FilesEventRepository;
 import com.osherovskaya.labs.database.model.File;
 
 
-
 public class Main {
     public static void main(String[] args) throws Exception {
         HikariConnectionFactory factory = new HikariConnectionFactory(
@@ -22,19 +21,13 @@ public class Main {
         databaseMigrator.runMigrations();
 
         try {
-            FilesEventRepository repo_jdbi = new FilesEventRepository(
-                    factory,
-                    System.getenv("APP_DATABASE_SCHEMA"),
-                    "shop");
-            System.out.println(repo_jdbi.getClass());
-
-             FilesEventRepository repository = new FilesEventRepository(factory, "office", "files");
+             FilesEventRepository repository = new FilesEventRepository(factory, "programming practise", "files");
              repository.save(new File(1, "My first Java Code", "1024"));
-             System.out.println(repository.getAll());
-             System.out.println(repository.getById(1));
-             repository.update(new File(2, "My last Java Code (im a frontender)", "101"));
+             System.out.println(repository.findAll());
+             System.out.println(repository.findById(1));
+             repository.update(new File(1, "My last Java Code (im a frontender)", "101"));
              repository.deleteById(2);
-             System.out.println(repository.getAll());
+             System.out.println(repository.findAll());
         }
         catch (RuntimeException exception) {
             throw new LabotoryRuntimeException(
