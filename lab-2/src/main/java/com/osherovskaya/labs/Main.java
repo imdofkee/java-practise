@@ -30,7 +30,7 @@ public class Main {
              System.out.println(repository.findAll());
         }
         catch (RuntimeException exception) {
-            throw new LabotoryRuntimeException(
+            throw new LabotoryRuntimeException( //по факту отлавливается и обычным RuntimeException
                     "Просчитались, вот где: " + exception.getMessage(),
                     exception
             );

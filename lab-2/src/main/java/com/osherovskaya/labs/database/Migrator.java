@@ -3,7 +3,6 @@ package com.osherovskaya.labs.database;
 import liquibase.Liquibase;
 import liquibase.database.jvm.JdbcConnection;
 import liquibase.resource.ClassLoaderResourceAccessor;
-import com.osherovskaya.labs.database.hikariFactory.ConnectionFactory;
 import com.osherovskaya.labs.database.hikariFactory.HikariConnectionFactory;
 
 import java.sql.Connection;
@@ -19,7 +18,8 @@ public class Migrator {
         try (Connection connection = connectionFactory.getConnection()) {
 
             Liquibase liquibase = new Liquibase(
-                    "db/changelog/db.changelog-master.xml",
+//                    "db/changelog/db.changelog-master.xml", // <------ старый путь
+                    "db/changelog/db.changelog-master.xml", // <------ новый
                     new ClassLoaderResourceAccessor(),
                     new JdbcConnection(connection)
             );
@@ -27,7 +27,7 @@ public class Migrator {
             liquibase.update();
             System.out.println("Миграции применены");
         } catch (Exception e) {
-            throw new RuntimeException("Ошибка при выполнении миграций", e);
+            throw new RuntimeException("Миграции - все, maven жестко о миграциях", e);
         }
     }
 

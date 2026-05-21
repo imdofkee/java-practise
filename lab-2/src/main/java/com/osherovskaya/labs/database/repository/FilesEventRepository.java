@@ -7,7 +7,7 @@ import com.osherovskaya.labs.database.repository.EntityRepository;
 
 import java.sql.*;
 import java.util.*;  // по факту только Array и ArrayList
-import java.util.Optional;
+//import java.util.Optional;
 
 public class FilesEventRepository implements EntityRepository {
 
@@ -23,7 +23,7 @@ public class FilesEventRepository implements EntityRepository {
     }
     // Optional?
     public File findById(int id) {
-        String sql = "SELECT id, file_name, sizeInKB FROM " + table + " WHERE id = ?";
+        String sql = "SELECT id, file_name, size_in_kb FROM " + table + " WHERE id = ?";
         try (
                 Connection conn = connectionFactory.getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -41,7 +41,7 @@ public class FilesEventRepository implements EntityRepository {
     }
 
     public List<File> findAll() {
-        String sql = "SELECT id, file_name, sizeInKB FROM " + table;
+        String sql = "SELECT id, file_name, size_in_kb FROM " + table;
         try (
                 Connection conn = connectionFactory.getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql);
@@ -58,7 +58,7 @@ public class FilesEventRepository implements EntityRepository {
     }
 
     public int save(File file) {
-        String sql = "INSERT INTO " + table + " (id, file_name, sizeInKB) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO " + table + " (id, file_name, size_in_kb) VALUES (?, ?, ?)";
         try (
                 Connection conn = connectionFactory.getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -78,7 +78,7 @@ public class FilesEventRepository implements EntityRepository {
                 (
                 id INTEGER PRIMARY KEY,
                 file_name TEXT NOT NULL,
-                sizeInKB TEXT NOT NULL
+                size_in_kb TEXT NOT NULL
                 )
                 """;
         try (Connection conn = connectionFactory.getConnection()) {
@@ -93,12 +93,12 @@ public class FilesEventRepository implements EntityRepository {
     private static File map(ResultSet rs) throws SQLException {
         int id = (int) rs.getObject("id");
         String fileName = rs.getString("file_name");
-        String sizeInKB = rs.getString("sizeInKB");
+        String sizeInKB = rs.getString("size_in_kb");
         return new File(id, fileName, sizeInKB);
     }
 
     public boolean update(File newObject) {
-        String sql = "UPDATE " + this.table + "SET file_name=?, sizeInKB=? WHERE id=?";
+        String sql = "UPDATE " + this.table + "SET file_name=?, size_in_kb=? WHERE id=?";
         try (Connection conn = this.connectionFactory.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, newObject.getFileName());
@@ -112,7 +112,7 @@ public class FilesEventRepository implements EntityRepository {
     }
 
     public File findByField(String filename) {
-        String sql = "SELECT id, file_name, sizeInKB FROM " + table + " WHERE file_name = ?";
+        String sql = "SELECT id, file_name, size_in_kb FROM " + table + " WHERE file_name = ?";
         try (Connection conn = connectionFactory.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, filename);

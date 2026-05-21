@@ -1,12 +1,9 @@
 package com.osherovskaya.labs.database.repository;
 
 import com.osherovskaya.labs.database.model.File;
-
 import java.util.List;
-//public class EntityRepository {
-//}
 
-// FileEntity на минималках
+// отец FilesEventRepository
 
 public interface EntityRepository {
     // Create (возвращает id созданной записи (в моем случае файла)
