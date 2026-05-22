@@ -6,7 +6,7 @@ import com.osherovskaya.labs.database.hikariFactory.HikariConnectionFactory;
 import com.osherovskaya.labs.database.repository.FilesEventRepository;
 import com.osherovskaya.labs.service.FilesEventService;
 //import com.osherovskaya.labs.web_app.Web;
-import com.osherovskaya.labs.database.exceptions.Exceptions;
+import com.osherovskaya.labs.database.exceptions.LabotoryRuntimeException;
 
 public class Main {
     public static void main(String[] args) throws Exceptions {

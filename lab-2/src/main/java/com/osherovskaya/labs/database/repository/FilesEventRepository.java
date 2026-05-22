@@ -1,6 +1,6 @@
 package com.osherovskaya.labs.database.repository;
 
-import com.osherovskaya.labs.database.exceptions.Exceptions;
+import com.osherovskaya.labs.database.exceptions.LabotoryRuntimeException;
 import com.osherovskaya.labs.database.hikariFactory.ConnectionFactory;
 import com.osherovskaya.labs.database.model.File;
 import com.osherovskaya.labs.database.repository.EntityRepository;
@@ -15,7 +15,7 @@ public class FilesEventRepository implements EntityRepository {
     private final String schema;
     private final String table;
 
-    public FilesEventRepository(ConnectionFactory connectionFactory, String schema, String table) throws Exceptions {
+    public FilesEventRepository(ConnectionFactory connectionFactory, String schema, String table) throws LabotoryRuntimeException {
         this.connectionFactory = connectionFactory;
         this.schema = schema;
         this.table = table;
@@ -36,7 +36,7 @@ public class FilesEventRepository implements EntityRepository {
             }
             return null;
         } catch (SQLException e) {
-            throw new RuntimeException("Ошибка в поиске по ID. Он точно существует?", e);
+            throw new LabotoryRuntimeException("Ошибка в поиске по ID. Он точно существует?", e);
         }
     }
 
@@ -53,7 +53,7 @@ public class FilesEventRepository implements EntityRepository {
             }
             return result;
         } catch (SQLException e) {
-            throw new RuntimeException("Ошибка фетча файлов", e);
+            throw new LabotoryRuntimeException("Ошибка фетча файлов", e);
         }
     }
 
@@ -68,7 +68,7 @@ public class FilesEventRepository implements EntityRepository {
             ps.setObject(3, file.getFileSize());
             ps.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException("Ошибка в сохранении", e);
+            throw new LabotoryRuntimeException("Ошибка в сохранении", e);
         }
         return file.getFileID();
     }
@@ -86,7 +86,7 @@ public class FilesEventRepository implements EntityRepository {
                 st.execute(createTable);
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Ошибка создания таблицы", e);
+            throw new LabotoryRuntimeException("Ошибка создания таблицы", e);
         }
     }
 
@@ -107,7 +107,7 @@ public class FilesEventRepository implements EntityRepository {
             int affectedRows = ps.executeUpdate();
             return affectedRows > 0;
         } catch (SQLException e) {
-            throw new RuntimeException("Не удалось обновить файл", e);
+            throw new LabotoryRuntimeException("Не удалось обновить файл", e);
         }
     }
 
@@ -123,7 +123,7 @@ public class FilesEventRepository implements EntityRepository {
                 return null;
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Ошибка поиска по имени файла", e);
+            throw new LabotoryRuntimeException("Ошибка поиска по имени файла", e);
         }
     }
 
@@ -136,7 +136,7 @@ public class FilesEventRepository implements EntityRepository {
             ps.setObject(1, id);
             ps.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException("Ошибка! Удалить не вышло", e);
+            throw new LabotoryRuntimeException("Ошибка! Удалить не вышло", e);
         }
     }
 }

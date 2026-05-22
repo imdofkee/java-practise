@@ -10,7 +10,7 @@ import java.util.List;
 
 
 public class Main {
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) throws LabotoryRuntimeException {
         HikariConnectionFactory factory = new HikariConnectionFactory(
                 System.getenv("DATABASE_URL"),
                 System.getenv("DATABASE_USERNAME"),
@@ -33,14 +33,14 @@ public class Main {
                 repository.deleteById(file.getFileID());
             }
 
-            repository.save(new File(1, "My first Java Code", "1024"));
+            repository.save(new File(1, "My first Java code", "1024"));
 //            System.out.println(repository.findAll());
             System.out.println(repository.findById(1));
-            repository.update(new File(1, "My last Java Code (im a frontender)", "101"));
+            repository.update(new File(1, "My last Java code, i will be a frontender! (i'll be a homeless)", "101"));
             repository.deleteById(2);
             System.out.println(repository.findAll());
 
-        } catch (RuntimeException exception) {
+        } catch (LabotoryRuntimeException exception) {
             throw new LabotoryRuntimeException(
                     "Просчитались, вот где: " + exception.getMessage(),
                     exception
