@@ -34,8 +34,6 @@ public class FilesServiceTest {
         testFile = new File(1, "приветЯпопугай.txt", "1024");
     }
 
-    // ==================== SAVE TESTS ====================
-
     @Test
     void save_shouldCallRepositoryAndReturnId() {
         when(repository.save(testFile)).thenReturn(1);
@@ -214,7 +212,6 @@ public class FilesServiceTest {
         verify(repository).update(any(File.class));
     }
 
-    // ==================== DELETE TESTS ====================
 
     @Test
     void deleteById_shouldCallRepositoryDelete() {
@@ -232,7 +229,7 @@ public class FilesServiceTest {
         verify(repository).deleteById(99);
     }
 
-    // ==================== SAFE DELETE TESTS ====================
+
 
     @Test
     void deleteByIdSafe_whenFileExists_shouldDelete() {
@@ -254,7 +251,7 @@ public class FilesServiceTest {
         verify(repository, never()).deleteById(anyInt());
     }
 
-    // ==================== EXISTS TESTS ====================
+
 
     @Test
     void exists_byId_whenFileExists_shouldReturnTrue() {

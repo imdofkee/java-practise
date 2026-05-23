@@ -14,7 +14,6 @@ public class FilesEventService implements EntityService{
         this.repository = repository;
     }
 
-    // Create - возвращает ID созданной записи
     public int save(File file) {
         try {
             return repository.save(file);
@@ -29,7 +28,6 @@ public class FilesEventService implements EntityService{
         return save(new File(id, name, String.valueOf(sizeInKb)));
     }
 
-    // Read by id - бросает исключение, если запись не найдена
     public File findById(int id) throws RuntimeException {
         File file = repository.findById(id);
         if (file != null) {
@@ -39,7 +37,6 @@ public class FilesEventService implements EntityService{
         }
     }
 
-    // Read by name - поиск по полю
     public File findByField(String filename) throws RuntimeException {
         File file = repository.findByField(filename);
         if (file != null) {
@@ -54,7 +51,6 @@ public class FilesEventService implements EntityService{
         return repository.findAll();
     }
 
-    // Update - бросает исключение, если запись не найдена
     public void update(File file) throws RuntimeException {
         File existingFile = repository.findById(file.getFileID());
         if (existingFile == null) {

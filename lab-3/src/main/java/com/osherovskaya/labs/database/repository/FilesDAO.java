@@ -22,10 +22,10 @@ public interface FilesDAO {
 
     @SqlUpdate("INSERT INTO files (id, file_name, size_in_kb) VALUES (:id, :name, :size_in_kb)")
     @GetGeneratedKeys
-    int insert(@Bind("id") int id, @Bind("name") String name, @Bind("size_in_kb") double size_in_kb);
+    int insert(@Bind("id") int id, @Bind("name") String name, @Bind("size_in_kb") String size_in_kb);
 
     @SqlUpdate("UPDATE files SET file_name = :name, size_in_kb = :size_in_kb WHERE id = :id")
-    void update(@Bind("id") int id, @Bind("name") String name, @Bind("size_in_kb") double size_in_kb);
+    void update(@Bind("id") int id, @Bind("name") String name, @Bind("size_in_kb") String size_in_kb);
 
     @SqlQuery("SELECT * FROM files WHERE name LIKE :name")
     List<File> findLikeName(@Bind("name") String name);
