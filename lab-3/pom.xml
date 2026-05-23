@@ -51,10 +51,15 @@
 <!--        <artifactId>jdbi3-hikaricp</artifactId>-->
 <!--    </dependency>-->
 
-    <!-- ========== JAKARTA TRANSACTIONAL API ========== -->
     <dependency>
         <groupId>jakarta.transaction</groupId>
         <artifactId>jakarta.transaction-api</artifactId>
+    </dependency>
+
+    <dependency>
+        <groupId>com.zaxxer</groupId>
+        <artifactId>HikariCP</artifactId>
+        <version>${hikaricp.version}</version>
     </dependency>
 
     <!-- ========== ЛОГИРОВАНИЕ ========== -->
@@ -75,10 +80,11 @@
         <version>2.15.2</version>
     </dependency>
 
-    <!-- ========== ТЕСТИРОВАНИЕ ========== -->
+    <!--  JUnit (Jupiter) для тестирования  -->
     <dependency>
         <groupId>org.junit.jupiter</groupId>
         <artifactId>junit-jupiter</artifactId>
+        <version>${junit.version}</version>
         <scope>test</scope>
     </dependency>
 

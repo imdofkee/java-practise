@@ -5,7 +5,7 @@ import com.osherovskaya.labs.database.exceptions.Exceptions;
 import com.osherovskaya.labs.database.hikariFactory.HikariConnectionFactory;
 import com.osherovskaya.labs.database.repository.FilesEventRepository;
 import com.osherovskaya.labs.service.FilesEventService;
-//import com.osherovskaya.labs.web_app.Web;
+import com.osherovskaya.labs.web_app.Web;
 import com.osherovskaya.labs.database.exceptions.LabotoryRuntimeException;
 
 public class Main {
@@ -28,8 +28,8 @@ public class Main {
             );
 
             FilesEventService service = new FilesEventService(repository);
-//            Web app = new Web(service);
-//            app.run(8080);
+            Web app = new Web(service);
+            app.run(8080);
         } catch (Exceptions e) {
             System.err.println("Ошибка при создании репозитория: " + e.getMessage());
             e.printStackTrace();

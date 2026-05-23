@@ -37,12 +37,12 @@ public class FilesEventController {
         int id = Integer.parseInt(ctx.pathParam("id"));
 
         try {
-            File order = filesService.findById(id);
+            File file = filesService.findById(id);
             ctx.status(200).json(
                     Map.of(
-                            "id", order.getFileID(),
-                            "file_name", order.getFileName(),
-                            "size_in_kb", order.getFileSize()
+                            "id", file.getFileID(),
+                            "file_name", file.getFileName(),
+                            "size_in_kb", file.getFileSize()
                     )
             );
         } catch (LabotoryRuntimeException e) {

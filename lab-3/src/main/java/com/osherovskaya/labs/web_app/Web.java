@@ -19,7 +19,7 @@ enum Role implements RouteRole {
 // Класс для аутентификации и авторизации
 class Auth {
     private static final Map<Pair, List<Role>> userRolesMap = Map.of(
-            new Pair("admin", "admin123"), List.of(Role.USER_READ, Role.USER_WRITE)
+            new Pair("my majesty", "illbehomeless"), List.of(Role.USER_READ, Role.USER_WRITE)
     );
 
     record Pair(String username, String password) {}
@@ -58,7 +58,6 @@ public class Web {
             config.router.mount(router -> {
                 router.beforeMatched(Auth::handleAccess);
             }).apiBuilder(() -> {
-                // Публичные эндпоинты (доступны всем)
                 get("/", ctx -> {
                     ctx.json(Map.of("message", "Welcome to Files API"));
                 }, Role.ANYONE);
@@ -67,9 +66,9 @@ public class Web {
                     ctx.status(418).json(Map.of("id", 1));
                 }, Role.ANYONE);
 
-                // Эндпоинты для работы с файлами
+                // Эндпоинты
                 path("files", () -> {
-                    // GET /files - поиск по имени (доступен всем, кто может читать)
+                    // GET /files - поиск по имени
                     get(ctx -> {
                         String name = ctx.queryParam("name");
                         if (name != null && !name.isEmpty()) {

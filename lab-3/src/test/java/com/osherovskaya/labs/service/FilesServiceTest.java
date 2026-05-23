@@ -31,7 +31,7 @@ public class FilesServiceTest {
 
     @BeforeEach
     void setUp() {
-        testFile = new File(1, "приветЯпопугай.txt", "1024");
+        testFile = new File(1, "test.txt", "1024");
     }
 
     @Test
@@ -134,11 +134,11 @@ public class FilesServiceTest {
 
     @Test
     void findByName_Ruined() {
-        when(repository.findByField("аМеняНет.txt")).thenReturn(null);
+        when(repository.findByField("missing.txt")).thenReturn(null);
 
         RuntimeException exception = assertThrows(RuntimeException.class, () -> service.findByField("missing.txt"));
-        assertEquals("Файл с именем 'аМеняНет.txt' не найден", exception.getMessage());
-        verify(repository, times(1)).findByField("аМеняНет.txt");
+        assertEquals("Файл с именем 'missing.txt' не найден", exception.getMessage());
+        verify(repository, times(1)).findByField("missing.txt");
     }
 
     @Test
